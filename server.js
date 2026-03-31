@@ -16,7 +16,15 @@ const cors = require("cors");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "https://admin-focasedu.vercel.app", // your frontend
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Optional: Connect Mongo if ready
 mongoose

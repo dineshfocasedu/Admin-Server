@@ -18,7 +18,8 @@ const app = express();
 app.use(express.json());
 const corsOptions = {
   origin: [
-    "https://admin-focasedu.vercel.app", // your frontend
+    "https://admin-focasedu.vercel.app",
+    "http://localhost:5173"// your frontend
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,

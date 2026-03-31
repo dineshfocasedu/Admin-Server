@@ -16,27 +16,27 @@ const cors = require("cors");
 
 const app = express();
 app.use(express.json());
+
 const corsOptions = {
   origin: [
     "https://admin-focasedu.vercel.app",
-    "http://localhost:5173"// your frontend
+    "http://localhost:5173",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 
-// Optional: Connect Mongo if ready
+// MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI, {
-    maxPoolSize: 10, // Maximum number of connections in the pool
-    minPoolSize: 2, // Minimum number of connections in the pool
-    maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
-    serverSelectionTimeoutMS: 30000, // Timeout for server selection
-    socketTimeoutMS: 45000, // Socket timeout
-    connectTimeoutMS: 30000, // Connection timeout
-    bufferCommands: false, // Disable mongoose buffering
+    maxPoolSize: 10,
+    minPoolSize: 2,
+    maxIdleTimeMS: 30000,
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    connectTimeoutMS: 30000,
+    // bufferCommands: false  ← REMOVED: causes crash on Vercel serverless
   })
   .then(() => console.log("Successfully connected to MongoDB."))
   .catch((err) => {
@@ -59,6 +59,7 @@ process.on("SIGTERM", async () => {
   process.exit(0);
 });
 
+// Health check routes
 app.get("/", (req, res) => {
   res.send("Mentor API is running...");
 });
@@ -71,14 +72,7 @@ app.get("/testing", (req, res) => {
   res.json({ status: "ok", message: "Test route responding" });
 });
 
-
-app.use((req, res, next) => {
-  // console.log("--- Incoming Request Body ---");
-  // console.log(req.body);
-  // console.log("---------------------------");
-  next();
-});
-
+// Routes
 app.use("/api/admin", adminRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/questions", questionRoutes);
@@ -88,9 +82,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/payment", paymentRoutes);
-app.use('/api/mcq', mcqRoutes);
-app.use("/api/data",webhookRoutes)
-// Files are now served from S3, no need for static serving
+app.use("/api/mcq", mcqRoutes);
+app.use("/api/data", webhookRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
@@ -98,5 +91,4 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log("File storage: AWS S3");
   console.log(`S3 Bucket: ${process.env.AWS_S3_BUCKET}`);
   console.log(`AWS Region: ${process.env.AWS_REGION}`);
-  console.log(`${process.env.MONGO_URI}-uri`);
 });

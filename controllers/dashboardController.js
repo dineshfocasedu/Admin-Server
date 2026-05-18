@@ -155,6 +155,7 @@ const getAdminMcqUsers = async (req, res) => {
       phone,
       dateFrom,
       dateTo,
+      attemptGiven,        // ← add this
       phoneOnly = 'true',
       limit = 10,
       page = 1,
@@ -177,6 +178,10 @@ const getAdminMcqUsers = async (req, res) => {
 
     if (caLevel && typeof caLevel === 'string') {
       match.caLevel = caLevel;
+    }
+
+    if (attemptGiven && typeof attemptGiven === 'string') {
+      match.attemptGiven = { $regex: attemptGiven, $options: 'i' };
     }
 
     if (dateFrom || dateTo) {

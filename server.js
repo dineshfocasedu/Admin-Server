@@ -20,6 +20,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "https://admin-focasedu.vercel.app",
+    "https://focas-admin.netlify.app",
     "http://localhost:5173",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],

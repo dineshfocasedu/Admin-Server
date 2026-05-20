@@ -21,6 +21,7 @@ const corsOptions = {
   origin: [
     "https://admin-focasedu.vercel.app",
     "https://focas-admin.netlify.app",
+    "https://focas-admin.vercel.app",
     "http://localhost:5173",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
